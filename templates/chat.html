@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>JobMentor</title>
+</head>
+
+<body>
+
+<h1>JobMentor</h1>
+
+<form action="/chat" method="post">
+    <input type="text" name="message" placeholder="相談内容を入力して下さい">
+    <button type="submit">送信</button>
+</form>
+
+{% if message %}
+    <h2>あなたの相談</h2>
+    <p>{{ message }}</p>
+{% endif %}
+
+{% if ai_reply %}
+    <h2>AIからの返答</h2>
+    <p>{{ ai_reply }}</p>
+{% endif %}
+
+<h2>相談履歴</h2>
+
+{% for log in logs %}
+    <div class="log-card">
+        <p><strong>相談：</strong>{{ log[0] }}</p>
+        <p><strong>AI：</strong>{{ log[1] }}</p>
+        <p><strong>カテゴリ：</strong>{{ log[2] }}</p>
+        <p><strong>根本原因：</strong>{{ log[3] }}</p>
+        <hr>
+    </div>
+{% endfor %}
+
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JobMentor 社内ダッシュボード</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+
+        <h1>JobMentor Customer Success Dashboard</h1>
+        <p class="subtitle">ユーザー相談データを分析し、各チームへの改善提案を行います。</p>
+
+        <div class="card">
+            <h2>AI分析結果</h2>
+
+            <h3>最も多い相談</h3>
+            <p class="big-number">{{ top_category }}：{{ top_count }}件</p>
+            
+            <h3>AI分析</h3>
+            <p>{{ analysis }}</p>
+
+            <h3>改善提案</h3>
+            <p>{{ suggestion}}</p>
+
+            <h3>改善提案</h3>
+
+            <ul>
+                <li>ガクチカ作成支援を強化</li>
+                <li>志望動機テンプレートを追加</li>
+                <li>自己PR添削機能を改善</li>
+            </ul>
+        </div>
+
+        <div class="graph-card"></div>
+            <h2>カテゴリ別相談件数</h2>
+
+            {% for item in category_counts %}
+                <div class="bar-row">
+                    <div class="bar-label">
+                        <strong>{{ item[0] }}</strong>
+                        <span>{{ item[1] }}件</span>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar" style="width: {{ item[1] * 40 }}px;"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <a href="/">チャット画面に戻る</a>
+
+    </div>
+</body>
+</html>

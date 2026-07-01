@@ -89,49 +89,46 @@ def dashboard(request: Request):
 
     category_counts = cursor.fetchall()
 
+    cursor.execute("""
+    SELECT message
+    FROM chat_logs
+    ORDER BY id DESC
+    LIMIT 30
+    """)
+    logs = cursor.fetchall()
+
     conn.close()
 
-    top_category = None
-    top_count = 0
-    analysis = ""
-    suggestion = ""
+    logs_text = "\n".join([log[0] for log in logs])
 
-
-    if category_counts:
-        top_category = category_counts[0][0]
-        top_count = category_counts[0][1]
-
-    if top_category == "面接":
-        analysis = "面接相談が最も多く、回答準備や受け答えに課題を感じる利用者が多いと考えられます。"
-        suggestion = "模擬面接・想定質問生成・回答フィードバック機能を強化する。"
-
-    elif top_category == "ES":
-        analysis = "ES相談が最も多く、応募書類の作成段階で多くの利用者が苦戦していることが分かりました。"
-        suggestion = "ES添削AI・ガクチカ整理・志望動機生成機能を優先的に強化する。"
-
-    elif top_category == "ガクチカ":
-        analysis = "ガクチカ相談が最も多く、経験の整理や言語化に悩む利用者が多いことが分かりました。"
-        suggestion = "経験整理・深掘り質問・成果の言語化支援を強化する。"
-
-    elif top_category == "自己分析":
-        analysis = "自己分析相談が多く、自分の強みや価値観の整理に課題がある利用者が多いと考えられます。"
-        suggestion = "価値観分析・強み発見・適職診断機能を強化する。"
-
-    else:
-        analysis = "その他の相談が多いため、既存カテゴリでは分類しきれない課題が発生している可能性があります。"
-        suggestion = "相談内容を再分類し、新しい支援領域の追加を検討する。"
+    business_analysis = ask_ai(f"""
+    以下はJobMentor利用者の相談履歴です。
+            
+    {logs_text}
     
+    この相談内容を分析し、企業向けに以下を入力して下さい。
+    『出力形式』
+    ▪️ 共通して見える顧客ニーズ
+    ・
+    ▪️ 根拠
+    ・
+    ▪️ 改善提案
+    ・
+    ▪️ 期待できる効果
+    ・
+    相談内容から根拠を考え、決めつけでなく分析して下さい。
+    回答は300文字以内
+    """)
     
     return templates.TemplateResponse(
         request=request,
         name="dashboard.html",
         context={
             "category_counts": category_counts,
-            "top_category": top_category,
-            "top_count": top_count,
-            "analysis": analysis,
-            "suggestion": suggestion
+            "top_category": category_counts[0][0] if category_counts else "",
+            "top_count": category_counts[0][1] if category_counts else 0,
+            "business_analysis": business_analysis
         }
     )
 
-   
+    

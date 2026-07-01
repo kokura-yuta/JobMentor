@@ -73,3 +73,14 @@ body {
 .bar-low{
     margin-bottom: 20px;
 }
+
+.business-message{
+    margin-top: 20px;
+    padding: 16px;
+    border-left: 5px solid #4f8cff;
+    background: #f5f7ff;
+    border-radius: 12px;
+    color: #333;
+    line-height: 1.6;
+
+}

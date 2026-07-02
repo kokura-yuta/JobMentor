@@ -89,6 +89,16 @@ def dashboard(request: Request):
 
     category_counts = cursor.fetchall()
 
+    total = sum(count for _, count in category_counts)
+
+    analysis_data = ""
+    if total > 0:
+        for category, count in category_counts:
+            percent = count / total * 100
+            analysis_data += f"{category}: {count}件 ({percent:.1f}%)\n"
+    else:
+        analysis_data = "相談データはありません。"
+
     cursor.execute("""
     SELECT message
     FROM chat_logs
@@ -102,18 +112,25 @@ def dashboard(request: Request):
     logs_text = "\n".join([log[0] for log in logs])
 
     business_analysis = ask_ai(f"""
-    以下はJobMentor利用者の相談履歴です。
-            
+
+    以下はカテゴリ別の相談割合です
+    {analysis_data}                              
+
+    以下は相談履歴です。       
     {logs_text}
     
-    この相談内容を分析し、企業向けに以下を入力して下さい。
+    この相談割合と相談履歴を分析し、割合が高いカテゴリから優先順位をつけて、企業向けに改善案を出して下さい。
     『出力形式』
-    ▪️ 共通して見える顧客ニーズ
-    ・
+    ▪️ 優先課題
+    ・最もわりあいが高いカテゴリと割合
+    ・2番目に割合が高いカテゴリと割合
+
     ▪️ 根拠
-    ・
+    ・相談履歴から見える理由
+
     ▪️ 改善提案
-    ・
+    ・優先度が高い順に提案
+    
     ▪️ 期待できる効果
     ・
     相談内容から根拠を考え、決めつけでなく分析して下さい。

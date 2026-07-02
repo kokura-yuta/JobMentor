@@ -75,12 +75,17 @@ body {
 }
 
 .business-message{
+    white-space: 16px;
     margin-top: 20px;
     padding: 16px;
     border-left: 5px solid #4f8cff;
     background: #f5f7ff;
     border-radius: 12px;
     color: #333;
-    line-height: 1.6;
+    line-height: 1.9;
 
+}
+
+.business-message br{
+    margin-bottom: 8px;
 }

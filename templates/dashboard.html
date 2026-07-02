@@ -21,7 +21,7 @@
             
             <h3>AIによる顧客ニーズ分析</h3>
             <p class="business-message">
-                {{ business_analysis }}
+                {{ business_analysis.replace('\n', '<br>') | safe }}
             </p>
         </div>
 
